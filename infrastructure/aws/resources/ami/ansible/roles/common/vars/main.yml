@@ -1,0 +1,5 @@
+os_environment:
+  - key: LANG
+    value : en_US.utf-8
+  - key: LC_ALL
+    value : en_US.utf-8

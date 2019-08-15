@@ -1,0 +1,10 @@
+/kyunam/logs/tomcat/*.log
+/kyunam/logs/tomcat/*.current
+{
+        daily
+        dateext
+        rotate 5
+        missingok
+        copytruncate
+        notifempty
+}

@@ -1,0 +1,122 @@
+- name: remove unused yum packages -ntp
+  become: yes
+  yum:
+    name: ntp
+    state: absent
+    lock_timeout: 180
+
+- name: update yum packages
+  become: yes
+  yum:
+    name: '*'
+    state: latest
+    update_cache: true
+    lock_timeout: 300
+
+- name: set Asia/Seoul timezone
+  become: yes
+  timezone:
+    name: Asia/Seoul
+
+- name: install chrony
+  become: yes
+  yum:
+    name: chrony
+    state: latest
+    lock_timeout: 180
+
+- name: populate /etc/environment
+  become: yes
+  lineinfile:
+    dest: '/etc/environment'
+    state: present
+    regexp: '^{{ item.key }}'
+    line: '{{ item.key }}={{ item.value}}'
+  with_items: '{{ os_environment }}'
+
+- name: install sysstat
+  become: yes
+  yum:
+    name: sysstat
+    state: latest
+
+- name: install git
+  become: yes
+  yum:
+    name: git
+    state: latest
+
+- name: install vim
+  become: yes
+  yum:
+    name: vim
+    state: latest
+
+# operation
+- name: install telnet
+  become: yes
+  yum:
+    name: telnet
+    state: latest
+    lock_timeout: 180
+
+- name: install jq
+  become: yes
+  yum:
+    name: jq
+    state: latest
+    lock_timeout: 180
+
+- name: Enable service chronyd, and not touch the state
+  become: yes
+  service:
+    name: chronyd
+    enabled: yes
+
+- name: Create /usr/share/agent directory
+  become: yes
+  file: path=/usr/share/agent state=directory
+
+#directory
+- name: Create default directory
+  become: yes
+  file:
+    path: '{{item}}'
+    owner: ec2-user
+    group: ec2-user
+    mode: 0755
+    recurse: yes
+    state: directory
+  with_items:
+    - [
+      '/kyunam/conf',
+      '/kyunam/logs/tomcat',
+      '/kyunam/logs/app',
+      '/kyunam/logs/nginx',
+      '/kyunam/service',
+      '/kyunam/data',
+    ]
+
+- name: Create kyunam user
+  become: yes
+  user:
+    name: kyunam
+    comment: kyunam user
+
+- name: Create /home/kyunam/.ssh directory
+  become: yes
+  file:
+    path: /home/kyunam/.ssh
+    owner: kyunam
+    group: kyunam
+    mode: 0700
+    state: directory
+
+- name: Enable passwordless sudo
+  become: yes
+  copy:
+    content: kyunam ALL=(ALL) NOPASSWD:ALL
+    dest: /etc/sudoers.d/kyunam
+    owner: root
+    group: root
+    mode: 0440

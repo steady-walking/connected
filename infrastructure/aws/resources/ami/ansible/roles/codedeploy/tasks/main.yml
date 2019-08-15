@@ -1,0 +1,12 @@
+- name: copy codedeploy-agent-install.sh
+  become: yes
+  copy:
+    src: codedeploy-agent-install.sh
+    dest: /tmp/codedeploy-agent-install.sh
+    owner: ec2-user
+    group: ec2-user
+    mode: 0755
+
+- name: run codedeploy-agent-install.sh
+  become: yes
+  command: /tmp/codedeploy-agent-install.sh

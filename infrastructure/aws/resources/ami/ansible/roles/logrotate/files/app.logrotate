@@ -1,0 +1,8 @@
+/kyunam/logs/app/*.log {
+        daily
+        dateext
+        rotate 5
+        missingok
+        copytruncate
+        notifempty
+}

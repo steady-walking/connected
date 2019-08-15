@@ -1,0 +1,8 @@
+- name: change ssh login message
+  become: yes
+  copy:
+    src: kyunam-motd.sh
+    dest: /etc/update-motd.d
+    owner: root
+    group: root
+    mode: 0755

@@ -1,0 +1,16 @@
+- name: Build Amazon Linux Base Image (JDK8)
+  hosts: all
+  roles:
+    - common
+    - kernel
+    - limits
+    - loginmsg
+    - docker
+    - ecr
+    - jdk8
+    - nginx
+    - logrotate
+    - pinpoint
+    - codedeploy
+    - secure-log
+    - vulnerability

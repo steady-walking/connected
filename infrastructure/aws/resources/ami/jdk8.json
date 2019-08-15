@@ -1,0 +1,40 @@
+{
+  "_comment": "JDK8 AMI using Amazon Linux2",
+  "variables": {
+    "ami_name": "{{isotime \"060102-1504\"}}-kyunam-base-amazon-linux2-jdk8",
+    "vpc_id": "{{env `VPC_ID`}}",
+    "subnet_id": "{{env `SUBNET_ID`}}",
+    "security_group_id": "{{env `SECURITY_GROUP_ID`}}",
+    "aws_unique_account_id": "{{env `AWS_ACCOUNT_ID`}}"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "source_ami": "ami-095ca789e0549777d",
+      "vpc_id": "{{user `vpc_id`}}",
+      "region": "ap-northeast-2",
+      "subnet_id": "{{user `subnet_id`}}",
+      "security_group_id": "{{user `security_group_id`}}",
+      "instance_type": "t2.small",
+      "ssh_interface": "private_ip",
+      "ssh_username": "ec2-user",
+      "ami_name": "{{user `ami_name` | clean_ami_name}}",
+      "ami_description": "K8s node with Amazon Linux2",
+      "tags": {
+        "Name": "{{user `ami_name` | clean_ami_name}}",
+        "BaseAMI_Id": "{{ .SourceAMI }}",
+        "BaseAMI_Name": "{{ .SourceAMIName }}",
+        "Type": "EC2.ami"
+      },
+      "ami_users": [
+        "{{user `aws_unique_account_id`}}"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/jdk8.yml"
+    }
+  ]
+}

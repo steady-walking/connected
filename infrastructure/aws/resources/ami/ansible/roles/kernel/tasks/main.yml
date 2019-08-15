@@ -1,0 +1,20 @@
+- name: change kernel parameters
+  become: yes
+  copy:
+    src: kyunam-kernel-params.conf
+    dest: /etc/sysctl.d
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Disable THP support scripts added to rc.local
+  become: yes
+  lineinfile:
+    path: /etc/rc.d/rc.local
+    line: |
+      echo never > /sys/kernel/mm/transparent_hugepage/enabled
+      echo never > /sys/kernel/mm/transparent_hugepage/defrag
+
+- name: Change permissions of /etc/rc.local to make it run on boot
+  become: yes
+  shell: chmod +x /etc/rc.d/rc.local

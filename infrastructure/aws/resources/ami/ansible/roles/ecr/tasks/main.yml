@@ -1,0 +1,29 @@
+- name: (amzn1) copy ecr-helper
+  become: yes
+  copy:
+    src: docker-credential-ecr-login
+    dest: /usr/local/bin/docker-credential-ecr-login
+    owner: root
+    group: root
+    mode: 0755
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'upstart'
+
+- name: (amzn2) install amazon-ecr-credential-helper
+  become: yes
+  package:
+    name: amazon-ecr-credential-helper
+    state: present
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'systemd'
+
+- name: make docker config directory
+  become: yes
+  file: path=/home/ec2-user/.docker state=directory
+
+- name: copy docker config.json
+  become: yes
+  copy:
+    src: config.json
+    dest: /home/ec2-user/.docker/config.json
+    owner: ec2-user
+    group: ec2-user
+    mode: 0644

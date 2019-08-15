@@ -1,0 +1,7 @@
+/kyunam/logs/nginx/*.log {
+        daily
+        dateext
+        rotate 5
+        missingok
+        copytruncate
+}

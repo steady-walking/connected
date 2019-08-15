@@ -1,0 +1,47 @@
+- name: remove default sshd_config
+  become: yes
+  file:
+    path: /etc/ssh/sshd_config
+    state: absent
+
+- name: copy custom sshd_config
+  become: yes
+  copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0644
+
+- name: remove default rsyslog.conf
+  become: yes
+  file:
+    path: /etc/rsyslog.conf
+    state: absent
+
+- name: copy custom rsyslog.conf
+  become: yes
+  copy:
+    src: rsyslog.conf
+    dest: /etc/rsyslog.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart rsyslog
+    - restart sshd
+
+- name: remove default syslog
+  become: yes
+  file:
+    path: /etc/logrotate.d/syslog
+    state: absent
+
+- name: copy custom syslog sftp log rotate setting
+  become: yes
+  copy:
+    src: syslog
+    dest: /etc/logrotate.d/syslog
+    owner: root
+    group: root
+    mode: 0644

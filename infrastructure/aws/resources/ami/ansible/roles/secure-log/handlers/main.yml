@@ -1,0 +1,19 @@
+- name: restart rsyslog
+  become: yes
+  shell: /etc/init.d/rsyslog restart
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'upstart'
+
+- name: restart rsyslog
+  become: yes
+  shell: sudo service rsyslog restart
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'systemd'
+
+- name: restart sshd
+  become: yes
+  shell: /etc/init.d/sshd restart
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'upstart'
+
+- name: restart sshd
+  become: yes
+  shell: sudo service sshd restart
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'systemd'

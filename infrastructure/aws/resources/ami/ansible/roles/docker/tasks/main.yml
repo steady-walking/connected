@@ -1,0 +1,49 @@
+- name: Creates /etc/docker
+  become: yes
+  file: path=/etc/docker state=directory
+
+- name: copy daemon.json
+  become: yes
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable amazon-linux-extras packages
+  shell: "amazon-linux-extras enable docker"
+  become: yes
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'systemd'
+
+- name: install docker
+  become: yes
+  yum:
+    name: docker
+    state: latest
+
+- name: Start service dockerd, if not started
+  become: yes
+  service:
+    name: docker
+    state: started
+
+- name: Non-root docker access
+  command: usermod -a -G docker ec2-user
+  become: yes
+
+- name: Non-root docker access
+  command: usermod -a -G docker kyunam
+  become: yes
+
+- name: Installing packages
+  become: yes
+  package:
+    name: python-pip
+    state: present
+
+- name: Installing docker compose
+  become: yes
+  pip:
+    name: docker-compose
+    state: present

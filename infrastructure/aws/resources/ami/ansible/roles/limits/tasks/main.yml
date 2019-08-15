@@ -1,0 +1,8 @@
+- name: change limits
+  become: yes
+  copy:
+    src: kyunam-limits.conf
+    dest: /etc/security/limits.d
+    owner: root
+    group: root
+    mode: 0644

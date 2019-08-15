@@ -1,0 +1,11 @@
+- name: Configure nginx log rotation
+  become: yes
+  copy: src=files/nginx.logrotate dest=/etc/logrotate.d/nginx
+
+- name: Configure tomcat log rotation
+  become: yes
+  copy: src=files/tomcat.logrotate dest=/etc/logrotate.d/tomcat
+
+- name: Configure app log rotation
+  become: yes
+  copy: src=files/app.logrotate dest=/etc/logrotate.d/app

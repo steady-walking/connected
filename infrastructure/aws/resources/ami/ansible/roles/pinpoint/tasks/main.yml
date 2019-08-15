@@ -1,0 +1,32 @@
+- name: Create pinpoint directory
+  become: yes
+  file: path=/usr/share/agent/pinpoint state=directory
+
+- name: download pinpoint-agent.x.tar.gz
+  become: yes
+  get_url:
+    url: https://github.com/naver/pinpoint/releases/download/1.8.3/pinpoint-agent-1.8.3.tar.gz
+    dest: /tmp/pinpoint-agent-1.8.3.tar.gz
+
+- name: unarchive pinpoint agent
+  become: yes
+  unarchive:
+    src: /tmp/pinpoint-agent-1.8.3.tar.gz
+    dest: /usr/share/agent/pinpoint
+    remote_src: true
+
+- name: remove poinpoint-agent.x.tar.gz
+  become: yes
+  file:
+    state: absent
+    path: /tmp/pinpoint-agent-1.8.3.tar.gz
+
+- name: remove pinpoint.config
+  become: yes
+  file:
+    state: absent
+    path: /usr/share/agent/pinpoint/pinpoint.config
+
+- name: rename pinpoint.config
+  become: yes
+  command: mv /usr/share/agent/pinpoint/pinpoint-real-env-lowoverhead-sample.config /usr/share/agent/pinpoint/pinpoint.config

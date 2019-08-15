@@ -1,0 +1,19 @@
+- name: (amzn2) enable extra-nginx1.12 repository
+  become: yes
+  shell: amazon-linux-extras enable nginx1.12
+  when: ansible_distribution == 'Amazon' and ansible_service_mgr == 'systemd'
+
+- name: install nginx and modules
+  become: yes
+  yum:
+    name:
+      - nginx
+      - nginx-mod-http-image-filter
+      - nginx-all-modules
+      - nginx-mod-http-xslt-filter
+      - nginx-mod-http-geoip
+      - nginx-mod-stream
+      - nginx-mod-http-perl
+      - nginx-mod-mail
+    state: latest
+
